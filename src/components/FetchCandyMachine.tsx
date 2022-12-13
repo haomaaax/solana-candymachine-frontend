@@ -5,9 +5,7 @@ import { FC, useEffect, useState } from "react"
 import styles from "../styles/custom.module.css"
 
 export const FetchCandyMachine: FC = () => {
-  const [candyMachineAddress, setCandyMachineAddress] = useState(
-    "9tQLFyLeaUwQ1PN2YDiFztZDxu4KT6px8CBYEapkshAD"
-  )
+  const [candyMachineAddress, setCandyMachineAddress] = useState("DU6hMFCZxqjwsSJ3cnazhNhzEDL2He8hYh7G4bs1P4La")
   const [candyMachineData, setCandyMachineData] = useState(null)
   const [pageItems, setPageItems] = useState(null)
   const [page, setPage] = useState(1)
@@ -17,15 +15,16 @@ export const FetchCandyMachine: FC = () => {
 
   // fetch candymachine by address
   const fetchCandyMachine = async () => {
-    // reset page to 1
+    
+    // Set page to 1 - we wanna be at the first page whenever we fetch a new Candy Machine
     setPage(1)
 
     // fetch candymachine data
     try {
       const candyMachine = await metaplex
-        .candyMachines()
+
+        .candyMachinesV2()
         .findByAddress({ address: new PublicKey(candyMachineAddress) })
-        .run()
 
       setCandyMachineData(candyMachine)
     } catch (e) {
@@ -33,7 +32,6 @@ export const FetchCandyMachine: FC = () => {
     }
   }
 
-  // paging
   const getPage = async (page, perPage) => {
     const pageItems = candyMachineData.items.slice(
       (page - 1) * perPage,
